@@ -1,8 +1,8 @@
-const mongodb = require('mongodb')
-const MongoClient = mongodb.MongoClient
+const {MongoClient, ObjectID} = require('mongodb')
 
 const connectionURL = 'mongodb://127.0.0.1:27017'
 const databaseName = 'task-manager'
+
 
 MongoClient.connect(connectionURL, {useNewUrlParser: true}, (error,client) => {
     if (error){
@@ -11,53 +11,28 @@ MongoClient.connect(connectionURL, {useNewUrlParser: true}, (error,client) => {
     
     const db = client.db(databaseName)
 
-    // db.collection('users').insertOne({
-    //     name: 'Fabiano',
-    //     age: 36
-    // }, (error,result) => {
+    // db.collection('users').findOne({_id: new ObjectID('5e6fa2830d05b71343582959')},(error,user) => {
     //     if(error){
-    //         return console.log('Unable to insert user')
+    //         return console.log('Unable to fecth')
     //     }
 
-    //     console.log(result.ops)
+    //     console.log(user)
     // })
 
-    // db.collection('users').insertMany([
-    //     {
-    //         name: 'Jen',
-    //         age: 28
-    //     },
-    //     {
-    //         name: 'Gunther',
-    //         age: 27
-    //     }
-    // ],(error,result) => {
-    //     if(error){
-    //         return console.log('Unable to insert users')
-    //     }
 
-    //     console.log(result.ops)
-    // })
-
-    db.collection('tasks').insertMany([
-        {
-            description: 'Do Groceries',
-            completed: false
-        },
-        {
-            description: 'Do Laundry',
-            completed: true
-        },
-        {
-            description: 'Do Dishes',
-            completed: false
-        }
-    ], (error,result) => {
-        if (error){
-            return console.log('Unable to insert tasks')
+    db.collection('tasks').findOne({_id: new ObjectID("5e6ea548f6e4a27ebe67dd56")},(error,task) => {
+        if(error) {
+            return console.log('Unable to fetch task')
         }
 
-        console.log(result.ops)
+        console.log(task)
     })
 
+    db.collection('tasks').find({completed:false}).toArray((error,tasks) => {
+        if(error){
+            return console.log(error)
+        }
+
+        console.log(tasks)
+    })
 })
