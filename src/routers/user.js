@@ -1,13 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
+const auth = require('../middleware/auth')
 
-router.get('/users',async (req,res) => {
-    try{
-        res.send(await User.find({}))
-    }catch(e){
-        res.status(500).send(e)
-    }
+router.get('/users/me',auth, async (req,res) => {
+    res.send(req.user)
 })
 
 router.get('/users/:id',async (req,res) => {
