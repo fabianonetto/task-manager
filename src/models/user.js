@@ -14,8 +14,8 @@ const userSchema = new mongoose.Schema({
         minlength: 6,
         trim: true,
         validate(value) {
-            if(value.toLowerCase().includes('password')){
-                throw new Error ('Password can not contain string password')
+            if (value.toLowerCase().includes('password')) {
+                throw new Error('Password can not contain string password')
             }
         }
     },
@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
         validate(value) {
             if (!validator.isEmail(value)) {
-                throw new Error ('Email is invalid')
+                throw new Error('Email is invalid')
             }
         }
     },
@@ -35,58 +35,62 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0,
         validate(value) {
-            if(value < 0) {
+            if (value < 0) {
                 throw new Error('Age must be a positve number')
             }
         }
     },
-    tokens: [
-        {
-            token: {
-                type: String,
-                required: true
-            }
+    tokens: [{
+        token: {
+            type: String,
+            required: true
         }
-    ]
+    }]
 })
 
-userSchema.virtual('tasks',{
+userSchema.virtual('tasks', {
     ref: 'Task',
     localField: '_id',
     foreignField: 'owner'
 })
 
-userSchema.methods.toJSON = function() {
+userSchema.methods.toJSON = function () {
     const user = this
     const userObject = user.toObject()
-    
+
     delete userObject.password
     delete userObject.tokens
 
     return userObject
 }
 
-userSchema.methods.generateAuthToken = async function() {
+userSchema.methods.generateAuthToken = async function () {
     const user = this
-    const token = jwt.sign({_id:user._id.toString()},'thisismynewcourse')
+    const token = jwt.sign({
+        _id: user._id.toString()
+    }, 'thisismynewcourse')
 
-    user.tokens = user.tokens.concat({token})
+    user.tokens = user.tokens.concat({
+        token
+    })
     await user.save()
 
-    return token    
+    return token
 }
 
-userSchema.statics.findByCredentials = async (email,password) => {
-    const user = await User.findOne({email})
+userSchema.statics.findByCredentials = async (email, password) => {
+    const user = await User.findOne({
+        email
+    })
 
-    if(!user) {
-        throw new Error ('Unable to login')
+    if (!user) {
+        throw new Error('Unable to login')
     }
 
-    const isMatch = await bcrypt.compare(password,user.password)
+    const isMatch = await bcrypt.compare(password, user.password)
 
-    if(!isMatch){
-        throw new Error ('Unable to login')
+    if (!isMatch) {
+        throw new Error('Unable to login')
     }
 
     return user
@@ -94,17 +98,17 @@ userSchema.statics.findByCredentials = async (email,password) => {
 
 
 //Hash the plain text password before saving
-userSchema.pre('save',async function(next) {
+userSchema.pre('save', async function (next) {
     const user = this
 
-    if(user.isModified('password')) {
-        user.password = await bcrypt.hash(user.password,8)
+    if (user.isModified('password')) {
+        user.password = await bcrypt.hash(user.password, 8)
     }
 
     next()
 })
 
-const User = mongoose.model('User',userSchema)
+const User = mongoose.model('User', userSchema)
 
 
 module.exports = User
