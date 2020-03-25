@@ -18,6 +18,8 @@ const upload = multer({
     }
 })
 
+
+
 router.get('/users/me', auth, async (req, res) => {
     res.send(req.user)
 })
@@ -39,6 +41,8 @@ router.post('/users', async (req, res) => {
 
 router.post('/users/me/avatar', upload.single('avatar') , (req,res) => {
     res.send()
+},(error,req,res,next) => {
+    res.status(400).send({error: error.message})
 })
 
 router.post('/users/login', async (req, res) => {
