@@ -5,7 +5,17 @@ const auth = require('../middleware/auth')
 const multer = require('multer')
 
 const upload = multer({
-    dest: 'avatars/'
+    dest: 'avatars',
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter(req,file,cb) {
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
+            return cb(new Error('Please upload an Image file'))
+        }
+
+        cb(undefined,true)
+    }
 })
 
 router.get('/users/me', auth, async (req, res) => {
