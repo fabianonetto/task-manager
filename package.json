@@ -12,7 +12,7 @@
     "testEnvironment": "node"
   },
   "keywords": [],
-  "author": "",
+  "author": "Fabiano Netto",
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^6.5.5",
