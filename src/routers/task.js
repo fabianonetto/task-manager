@@ -40,7 +40,7 @@ router.patch('/tasks/:id', auth, async (req, res) => {
 
         res.send(task)
     } catch (e) {
-        res.status(500).send(e)
+        res.status(500).send()
     }
 })
 
@@ -57,7 +57,7 @@ router.delete('/tasks/:id', auth, async (req, res) => {
 
         res.send(task)
     } catch (e) {
-        res.status(500).send(e)
+        res.status(500).send()
     }
 })
 
@@ -91,7 +91,7 @@ router.get('/tasks', auth, async (req, res) => {
 
         res.send(req.user.tasks)
     } catch (e) {
-        res.status(500).send(e)
+        res.status(500).send()
     }
 })
 
@@ -109,7 +109,7 @@ router.get('/tasks/:id', auth, async (req, res) => {
         }
         res.send(task)
     } catch (e) {
-        res.status(500).send(e)
+        res.status(500).send()
     }
 })
 
